@@ -4,11 +4,14 @@ on:
       name:
         required: true
         type: string
+      env:
+        required: true
+        type: string  
 
 jobs:
   prepare:
     runs-on: ubuntu-latest
-    environment: dev.plan
+    environment: ${{ inputs.env}}.plan
     steps:
       - run: |
           echo "name=${{ inputs.name }}"
