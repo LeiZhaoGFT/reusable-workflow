@@ -8,6 +8,7 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    environment: 
     steps:
       - run: |
           echo "name=${{ inputs.name }}"
