@@ -1,0 +1,14 @@
+on:
+  workflow_call:
+    inputs:
+      name:
+        required: true
+        type: string
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "name=${{ inputs.name }}"
+          echo "TFE_ORG=${{ secrets.TFE_ORG }}"
