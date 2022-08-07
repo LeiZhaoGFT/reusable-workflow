@@ -4,33 +4,32 @@ on:
       name:
         required: true
         type: string
-      env:
-        required: true
-        type: string  
 
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    outputs:
+      env: ${{ steps.env.outputs.env }}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 
 
-    - id: changed-files
+    - id: changed-dirs
       uses: tj-actions/changed-files@v24.1
       with:
         dir_names: "true"
 
-    - run: |
-        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
-            echo "$file was changed"
-        done
-        dir=$(for d in ${{ steps.changed-files.outputs.all_changed_files }}; do echo "${d}"; done)
+    - name: env
+      run: |
+        dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
         echo $dir
+        echo "::set-output name=env::$dir"
 
   plan:
+    needs: prepare
     runs-on: ubuntu-latest
-    environment: ${{ inputs.env}}.plan
+    environment: ${{ needs.prepare.outputs.env}}.plan
     steps:
     - run: |
         echo "name=${{ inputs.name }}"
