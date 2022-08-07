@@ -24,6 +24,7 @@ jobs:
       run: |
         dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
         echo $dir
+        dir=dev
         echo "::set-output name=env::$(echo $dir)"
 
   plan:
@@ -32,6 +33,6 @@ jobs:
     environment: ${{ needs.prepare.outputs.env}}.plan
     steps:
     - run: |
-        echo "${{ needs.prepare.outputs.env}}"
+        echo "${{ needs.prepare.outputs.env }}"
         echo "name=${{ inputs.name }}"
         echo "TFE_ORG=${{ secrets.TFE_ORG }}"
