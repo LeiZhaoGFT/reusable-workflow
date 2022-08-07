@@ -20,7 +20,7 @@ jobs:
       with:
         dir_names: "true"
 
-    - name: env
+    - id: env
       run: |
         dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
         echo $dir
