@@ -32,5 +32,6 @@ jobs:
     environment: ${{ needs.prepare.outputs.env}}.plan
     steps:
     - run: |
+        echo "${{ needs.prepare.outputs.env}}"
         echo "name=${{ inputs.name }}"
         echo "TFE_ORG=${{ secrets.TFE_ORG }}"
