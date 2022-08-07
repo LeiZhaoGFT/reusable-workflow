@@ -24,7 +24,7 @@ jobs:
       run: |
         dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
         echo $dir
-        echo "::set-output name=env::$dir"
+        echo "::set-output name=env::$(echo $dir)"
 
   plan:
     needs: prepare
