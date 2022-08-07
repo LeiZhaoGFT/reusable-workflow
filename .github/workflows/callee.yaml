@@ -11,8 +11,27 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0 
+
+    - id: changed-files
+      uses: tj-actions/changed-files@v24.1
+      with:
+        dir_names: "true"
+
+    - run: |
+        for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+        done
+        dir=$(for d in ${{ steps.changed-files.outputs.all_changed_files }}; do echo "${d}"; done)
+        echo $dir
+
+  plan:
+    runs-on: ubuntu-latest
     environment: ${{ inputs.env}}.plan
     steps:
-      - run: |
-          echo "name=${{ inputs.name }}"
-          echo "TFE_ORG=${{ secrets.TFE_ORG }}"
+    - run: |
+        echo "name=${{ inputs.name }}"
+        echo "TFE_ORG=${{ secrets.TFE_ORG }}"
