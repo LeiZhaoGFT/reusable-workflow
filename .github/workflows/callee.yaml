@@ -29,7 +29,6 @@ jobs:
           echo "::set-output name=environments::dev"
         elif ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         then
-          #dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
           environments=$(for grade in $GRADES; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
           echo $environments
           echo "::set-output name=environments::$(echo $environments)"
