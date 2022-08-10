@@ -8,6 +8,8 @@ on:
 jobs:
   prepare:
     runs-on: ubuntu-latest
+    env:
+      GRADES: ${{ secrets.GRADES }}
     outputs:
       env: ${{ steps.env.outputs.environments }}
     steps:
@@ -24,7 +26,7 @@ jobs:
       run: |
         if ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
           #dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
-          environments=$(for grade in $grades; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
+          environments=$(for grade in $GRADES; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
           echo $environments
           echo "::set-output name=environments::$(echo $environments)"
         fi
