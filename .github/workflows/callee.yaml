@@ -9,30 +9,35 @@ jobs:
   prepare:
     runs-on: ubuntu-latest
     outputs:
-      env: ${{ steps.env.outputs.env }}
+      env: ${{ steps.env.outputs.environments }}
     steps:
     - uses: actions/checkout@v3
       with:
         fetch-depth: 0 
 
-    - id: changed-dirs
-      uses: tj-actions/changed-files@v24.1
-      with:
-        dir_names: "true"
+    # - id: changed-dirs
+    #   uses: tj-actions/changed-files@v24.1
+    #   with:
+    #     dir_names: "true"
 
     - id: env
       run: |
-        dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
-        echo $dir
-        dir=dev
-        echo "::set-output name=env::$(echo $dir)"
+        if ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
+          #dir=$(for d in ${{ steps.changed-dirs.outputs.all_changed_files }}; do echo "${d}"; done)
+          environments=$(for grade in $grades; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
+          echo $environments
+          echo "::set-output name=environments::$(echo $environments)"
+        fi
 
   plan:
     needs: prepare
+    strategy:
+      matrix:
+        env: ${{ needs.prepare.outputs.environments }}
     runs-on: ubuntu-latest
-    environment: ${{ needs.prepare.outputs.env}}.plan
+    environment: ${{ matrix.env }}.plan
     steps:
     - run: |
-        echo "${{ needs.prepare.outputs.env }}"
+        echo "env=${{ matrix.env }}"
         echo "name=${{ inputs.name }}"
         echo "TFE_ORG=${{ secrets.TFE_ORG }}"
