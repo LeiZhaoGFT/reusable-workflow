@@ -23,7 +23,7 @@ jobs:
 
     - uses: LeiZhaoGFT/reusable-workflow/.github/actions/terraform-validate@main
       with:
-        TFE_ORG: ${{ secrets.TFE_ORG }} 
+        ORG_SECRET: ${{ secrets.TFE_ORG }} 
         PWD: dev
 
     # - id: changed-dirs
