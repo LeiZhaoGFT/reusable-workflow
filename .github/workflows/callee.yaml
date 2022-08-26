@@ -21,7 +21,9 @@ jobs:
       with:
         fetch-depth: 0 
 
-    - uses: LeiZhaoGFT/reusable-workflow/.github/actions/terraform-validate@main
+    - id: validate
+      name: terraform validate
+      uses: LeiZhaoGFT/reusable-workflow/.github/actions/terraform-validate@main
       with:
         REPO_SECRET: ${{ secrets.GRADES }} 
         PWD: dev
@@ -35,7 +37,8 @@ jobs:
       run: |
         if ${{ github.event_name == 'workflow_dispatch' }}
         then
-          echo "::set-output name=environments::dev"
+          matrix='{"env":["dev"]}'
+          echo "::set-output name=environments::$matrix"
         elif ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         then
           environments=$(for grade in $GRADES; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
@@ -46,8 +49,7 @@ jobs:
   plan:
     needs: prepare
     strategy:
-      matrix:
-        env: ${{ needs.prepare.outputs.environments }}
+      matrix: ${{ fromJson(needs.prepare.outputs.environments) }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.env }}.plan
     steps:
