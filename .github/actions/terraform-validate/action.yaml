@@ -1,0 +1,23 @@
+name: 'terraform validate'
+description: 'Terrform Validate'
+
+inputs:
+  TFE_ORG:  
+    description: 'TFE_ORG secret'
+    required: true
+  PWD:
+    description: 'working directory'
+    required: true
+
+runs:
+  using: "composite"
+  steps:
+  - id: working_dir
+    run: |
+      pwd
+      ls -a
+    working-directory: ${{ inputs.PWD }}
+
+  - id: secret_input
+    run: echo "TFE_ORG=${{ inputs.TFE_ORG }}"
+    working-directory: ${{ inputs.PWD }}
