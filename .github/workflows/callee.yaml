@@ -15,7 +15,7 @@ jobs:
     env:
       GRADES: ${{ secrets.GRADES }}
     outputs:
-      env: ${{ steps.env.outputs.environments }}
+      matrix: ${{ steps.matrix.outputs.matrix }}
     steps:
     - uses: actions/checkout@v3
       with:
@@ -33,13 +33,13 @@ jobs:
     #   with:
     #     dir_names: "true"
 
-    - id: env
+    - id: matrix
       name: matrix
       run: |
         if ${{ github.event_name == 'workflow_dispatch' }}
         then
           matrix='{"env":["dev"]}'
-          echo "::set-output name=environments::$(echo $matrix)"
+          echo "::set-output name=matrix::$matrix"
         elif ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         then
           environments=$(for grade in $GRADES; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
@@ -50,7 +50,7 @@ jobs:
   plan:
     needs: prepare
     strategy:
-      matrix: ${{ fromJson(needs.prepare.outputs.environments) }}
+      matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.env }}.plan
     steps:
