@@ -34,11 +34,12 @@ jobs:
     #     dir_names: "true"
 
     - id: env
+      name: matrix
       run: |
         if ${{ github.event_name == 'workflow_dispatch' }}
         then
           matrix='{"env":["dev"]}'
-          echo "::set-output name=environments::$matrix"
+          echo "::set-output name=environments::$(echo $matrix)"
         elif ${{ github.event_name == 'push' || github.event_name == 'pull_request' }}
         then
           environments=$(for grade in $GRADES; do if ! git diff --quiet HEAD main -- $grade; then echo $grade; fi; done)
