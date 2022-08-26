@@ -2,8 +2,8 @@ name: 'terraform validate'
 description: 'Terrform Validate'
 
 inputs:
-  ORG_SECRET:  
-    description: 'TFE_ORG secret'
+  REPO_SECRET:  
+    description: 'Repository secret'
     required: true
   PWD:
     description: 'working directory'
@@ -20,6 +20,6 @@ runs:
     working-directory: ${{ inputs.PWD }}
 
   - id: secret_input
-    run: echo "TFE_ORG=${{ inputs.ORG_SECRET }}"
+    run: echo "TFE_ORG=${{ inputs.REPO_SECRET }}"
     shell: bash
     working-directory: ${{ inputs.PWD }}
