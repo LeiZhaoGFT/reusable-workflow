@@ -57,14 +57,14 @@ jobs:
       run:
         working-directory: ${{ matrix.env }}
     steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - run: |
         echo "env=${{ matrix.env }}"
         echo "name=${{ inputs.name }}"
         echo "TFE_ORG=${{ secrets.TFE_ORG }}"
-
-    - uses: actions/checkout@v3
-      with:
-        fetch-depth: 0     
 
     - run: terraform init
     - run: terraform apply -auto-approve
