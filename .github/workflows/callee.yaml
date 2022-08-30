@@ -21,9 +21,9 @@ jobs:
       with:
         fetch-depth: 0 
 
-    - id: validate
-      name: terraform validate
-      uses: LeiZhaoGFT/reusable-workflow/.github/actions/terraform-validate@main
+    - id: composite
+      name: composite
+      uses: LeiZhaoGFT/reusable-workflow/.github/actions/composite@main
       with:
         REPO_SECRET: ${{ secrets.GRADES }} 
         PWD: dev
@@ -58,3 +58,7 @@ jobs:
         echo "env=${{ matrix.env }}"
         echo "name=${{ inputs.name }}"
         echo "TFE_ORG=${{ secrets.TFE_ORG }}"
+
+    - id: terraform
+      run: terraform apply -auto-approve
+      working-directory: ${{ matrix.env }}
