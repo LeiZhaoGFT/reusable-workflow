@@ -53,6 +53,9 @@ jobs:
       matrix: ${{ fromJson(needs.prepare.outputs.matrix) }}
     runs-on: ubuntu-latest
     environment: ${{ matrix.env }}.plan
+    defaults:
+      run:
+        working-directory: ${{ matrix.env }}
     steps:
     - run: |
         echo "env=${{ matrix.env }}"
@@ -63,6 +66,5 @@ jobs:
       with:
         fetch-depth: 0     
 
-    - id: terraform
-      run: terraform apply -auto-approve
-      working-directory: ${{ matrix.env }}
+    - run: terraform init
+    - run: terraform apply -auto-approve
